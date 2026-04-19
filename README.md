@@ -47,15 +47,14 @@ treinamento ou classificação com algum dos algoritmos. O mock não só funcion
 consegue verificar diversas propriedades do input inicial (X,y) ao longo do pipeline completo, de acordo com alguma função 
 particular de verificação. A classe de mock pode ser encontrada [aqui](https://github.com/scikit-learn/scikit-learn/blob/main/sklearn/utils/_mocking.py). Um exemplo pode ser visto abaixo:
 
-`from sklearn.utils._mocking import CheckingClassifier`
-`This helper allow to assert to specificities regarding 'X' or 'y'. In this`
-`case we expect 'check_X' or 'check_y' to return a boolean.`
-
-`>>> from sklearn.datasets import load_iris`
-`>>> X, y = load_iris(return_X_y=True)`
-`>>> clf = CheckingClassifier(check_X=lambda x: x.shape == (150, 4))`
-`>>> clf.fit(X, y)`
-`CheckingClassifier(...)`
+>>> from sklearn.utils._mocking import CheckingClassifier
+>>> This helper allow to assert to specificities regarding 'X' or 'y'. In this`
+>>> case we expect 'check_X' or 'check_y' to return a boolean.`
+>>> from sklearn.datasets import load_iris
+>>> X, y = load_iris(return_X_y=True)
+>>> clf = CheckingClassifier(check_X=lambda x: x.shape == (150, 4))
+>>> clf.fit(X, y)
+>>> CheckingClassifier(...)
 
 Para testar essa classe, foi feito uma [classe de testes para o mock](https://github.com/scikit-learn/scikit-learn/blob/main/sklearn/utils/tests/test_mocking.py), que faz o uso de fixtures para inicializar os datasets
 e para criar essas funções de verificação previamente estabelecidas, que funcionam de forma simples. Além disso, fazem o uso
