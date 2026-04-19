@@ -37,6 +37,29 @@ Com base nos dados obtidos, selecione uma prática ou dado de teste relevante e 
 
 ## Respostas
 
-**1. Repositório selecionado:** `<URL_DO_REPOSITÓRIO_AQUI>`
+**1. Repositório selecionado:** [scikit-learn](https://github.com/scikit-learn/scikit-learn)
 
-**2. Explicação:** `<SUA_EXPLICAÇÃO_AQUI>`
+**2. Explicação:** O scikit-learn é um framework que provê a implementação de diversos algoritmos de aprendizado de máquina
+além de ferramentas estatísticas, ou até mesmo *toy datasets*. Em particular, me chamou a atenção o uso de mocks com o objetivo
+de *mockar* classificadores. E existe uma bateria de testes que testam o funcionamento desse mock. Basicamente, o objetivo do
+mock é prover uma forma de testar pipelines de machine learning, i.e., uma sequência de processamento nos dados seguida de um
+treinamento ou classificação com algum dos algoritmos. O mock não só funciona como um mock para classificadores, mas também
+consegue verificar diversas propriedades do input inicial (X,y) ao longo do pipeline completo, de acordo com alguma função 
+particular de verificação. A classe de mock pode ser encontrada [aqui](https://github.com/scikit-learn/scikit-learn/blob/main/sklearn/utils/_mocking.py). Um exemplo pode ser visto abaixo:
+
+`
+    from sklearn.utils._mocking import CheckingClassifier
+    This helper allow to assert to specificities regarding `X` or `y`. In this
+    case we expect `check_X` or `check_y` to return a boolean.
+
+    >>> from sklearn.datasets import load_iris
+    >>> X, y = load_iris(return_X_y=True)
+    >>> clf = CheckingClassifier(check_X=lambda x: x.shape == (150, 4))
+    >>> clf.fit(X, y)
+    CheckingClassifier(...)
+`
+
+Para testar essa classe, foi feito uma [classe de testes para o mock](https://github.com/scikit-learn/scikit-learn/blob/main/sklearn/utils/tests/test_mocking.py), que faz o uso de fixtures para inicializar os datasets
+e para criar essas funções de verificação previamente estabelecidas, que funcionam de forma simples. Além disso, fazem o uso
+muito elegante de uma ferramenta chamada `parametrize`, que é um decorator do pytest, que tem a função de executar um mesmo teste
+múltiplas vezes com uma bateria de inputs pré-definidos.
